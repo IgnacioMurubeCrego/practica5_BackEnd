@@ -2,14 +2,12 @@
 import express from "express";
 import mongoose from "mongoose";
 
-try {
-  const MONGO_URL = Deno.env.get("MONGO_URL");
+const MONGO_URL = Deno.env.get("MONGO_URL");
 
 if (!MONGO_URL) {
-  throw new Error("No mongo URL found");
+  console.log("No mongo URL found");
+  Deno.exit(1);
 }
-
-
 
 await mongoose.connect(MONGO_URL);
 const app = express();
@@ -22,6 +20,3 @@ app.listen(3000, () => {
   console.log("Server listening on port 3000");
 });
 
-} catch (error) {
-  console.log(error);
-}
