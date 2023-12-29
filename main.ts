@@ -1,7 +1,8 @@
-// @deno-types="npm:@types/express@4"
-import express from "express";
+import { startStandaloneServer } from "@apollo/server/standalone";
 import mongoose from "mongoose";
 import { load } from "https://deno.land/std@0.204.0/dotenv/mod.ts";
+import { server } from "./server.ts";
+
 const env = await load();
 
 const MONGO_URL = env.MONGO_URL || Deno.env.get("MONGO_URL");
@@ -17,13 +18,11 @@ try {
   console.log(error);
 }
 
-const app = express();
-app.use(express.json());
-
-app
-  .get("/", () => console.log("Working!"));
-
-app.listen(3000, () => {
-  console.log("Server listening on port 3000");
+const { url } = await startStandaloneServer(server, {
+  listen: {
+    port: 3000,
+  },
 });
+
+console.info(`Server is listening ${url}`);
 
